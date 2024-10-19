@@ -1,4 +1,10 @@
 import { React, useState } from 'react';
+import { storage } from '../HomePage/firebase';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../HomePage/firebase';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Report = () => {
       const [itemName, setItemName] = useState('');
@@ -6,8 +12,45 @@ export const Report = () => {
       const [dateFound, setDateFound] = useState('');
       const [timeFound, setTimeFound] = useState('');
       const [description, setDescription] = useState('');
+      const [file,setFile] = useState(null);
+      const [downloadUrl,setDownloadUrl] = useState(""); 
+
       const handleSubmit = (e) => {
             e.preventDefault();
+
+            console.log(file)
+
+            
+            if(file != null){
+                  const imageName = itemName + Date.now();
+                  const imagesRef = ref(storage, `image/${imageName}`);
+                  uploadBytes(imagesRef,  file).then((snapshot) => {
+                  console.log(file);
+                  getDownloadURL(snapshot.ref).then((url)  => {
+                        const formData = {
+                              itemName,
+                              landmark,
+                              dateFound,
+                              timeFound,
+                              description,
+                              url
+                        };
+                        console.log("BYE")
+                        setDownloadUrl(url);
+                        console.log(url);
+                        addDoc(collection(db, 'foundItems'), formData).then((snapshot) => {
+                              toast.success("Item added!", {
+                                    position: "top-right"
+                              });
+                        });
+                  });
+            });
+      }
+            else {
+                  console.log("HELLO R")
+            }
+
+
             const formData = {
                   itemName,
                   landmark,
@@ -22,9 +65,10 @@ export const Report = () => {
                   <div className='flex flex-col gap-4 items-center'>
                         <h1 className='text-2xl text-red-600 font-bold'>Report Missing Items</h1>
                         <form className="items-center bg-gray-100 p-6 rounded-lg shadow-lg w-[1000px]" onSubmit={handleSubmit}>
+                        <ToastContainer />
                               <div className="mb-4">
                                     <label className="block text-gray-700 font-bold mb-2">Insert Image* (acceptable filetype: jpeg/png)</label>
-                                    <input type="file" accept="image/jpeg,image/png" className="border border-gray-300 p-2 w-full" />
+                                    <input type="file" accept="image/jpeg,image/png" className="border border-gray-300 p-2 w-full" onChange={(e) => setFile(e.target.files[0])} />
                               </div>
 
                               <div className="mb-4">

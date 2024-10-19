@@ -76,8 +76,9 @@ export const SignUp = () => {
 
   return (
     <div>
+      <div className='bg-gray-100 h-screen'>
       <Navbar />
-      <div className="flex items-center justify-center h-screen bg-gray-100 overflow-hidden">
+      <div className=" flex items-center justify-center mt-32">
         <div className="flex bg-white rounded-lg shadow-lg max-w-6xl overflow-hidden">
           <div className="hidden md:block w-1/2">
             <div className='flex justify-center items-center'>
@@ -178,7 +179,7 @@ export const SignUp = () => {
             <ToastContainer />
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   );
 }  

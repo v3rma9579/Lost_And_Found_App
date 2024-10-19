@@ -15,7 +15,7 @@ export const Navbar = () => {
       }
       return (
             <>
-                  <div className='hidden fixed md:block w-full'>
+                  <div className='hidden md:block w-full sticky top-0 bg-white -mb-40'>
 
 
                         <nav className='text-white w-full flex justify-between items-center p-5'>
@@ -36,11 +36,11 @@ export const Navbar = () => {
 
                                     <div className='flex gap-2 font-rubik 2xl:text-[25px]'>
                                           <Link to='/login'>
-                                                <button className='border-2 py-2 px-4 rounded-full text-[#F74780] border-[#F74780]  hover:bg-[#F74780] hover:border hover:text-white'>Log In</button>
+                                                <button className='w-32 border-2 py-2 px-4 rounded-full text-[#F74780] border-[#F74780]  hover:bg-[#F74780] hover:border hover:text-white'>Log In</button>
                                           </Link>
 
                                           <Link to='/signup'>
-                                          <button className='border-2 py-2 px-4 rounded-full bg-[#F74780] hover:bg-white hover:text-[#F74780] hover:border hover:border-[#F74780]'>Sign Up</button>
+                                          <button className='w-32 border-2 py-2 px-4 rounded-full bg-[#F74780] hover:bg-white hover:text-[#F74780] hover:border hover:border-[#F74780]'>Sign Up</button>
                                           </Link>
 
                                          
@@ -51,7 +51,7 @@ export const Navbar = () => {
                         </nav>
                   </div>
 
-                  <div className='md:hidden'>
+                  <div className='md:hidden -mb-40'>
 
                         <nav className='flex items-center justify-between p-5'>
                               <div className='flex items-center gap-2 ml-5 text-black cursor-pointer'>

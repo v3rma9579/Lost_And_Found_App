@@ -10,7 +10,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="flex gap-20 mb-20 ml-10">
+      <div className="flex flex-col md:flex-row md:gap-20 gap-5 mb-20 p-5 items-start">
         <div className="bg-blue-600 p-6 h-[200px] w-[300px] rounded-md flex flex-col justify-around shadow-xl transition duration-300 hover:scale-105 cursor-pointer">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-white">Your Claimed Items</h3>
@@ -42,60 +42,60 @@ export const Dashboard = () => {
         <table className="w-full table-auto border-2">
           <thead className=''>
             <tr className="text-left bg-gray-800 text-white h-12">
-              <th className="pb-2">Item Name</th>
-              <th className="pb-2">Landmark</th>
-              <th className="pb-2">Date Found</th>
-              <th className="pb-2">Time Found</th>
-              <th className="pb-2">Status</th>
+              <th className="p-2">Item Name</th>
+              <th className="p-2">Landmark</th>
+              <th className="p-2">Date Found</th>
+              <th className="p-2">Time Found</th>
+              <th className="p-2">Status</th>
             </tr>
           </thead>
           <tbody>
             <tr className="border-t">
-              <td className="py-2 flex items-center">
+              <td className="p-2 flex items-center">
 
                 Realme Earbuds
               </td>
-              <td className="py-2">R&D Building</td>
-              <td className="py-2">
+              <td className="p-2">R&D Building</td>
+              <td className="p-2">
                 <span className="">08-10-2024</span>
               </td>
-              <td className="py-2">
+              <td className="p-2">
                 <span className="">10:00 AM</span>
               </td>
-              <td className="py-2">
+              <td className="p-2">
                 <span className="text-yellow-500">Pending</span>
               </td>
             </tr>
             <tr className="border-t">
-              <td className="py-2 flex items-center">
+              <td className="p-2 flex items-center">
 
                 Oneplus Phone
               </td>
-              <td className="py-2">Sports Complex</td>
-              <td className="py-2">
+              <td className="p-2">Sports Complex</td>
+              <td className="p-2">
                 <span className="">03-05-2024</span>
               </td>
-              <td className="py-2">
+              <td className="p-2">
                 <span className="">06:30 PM</span>
               </td>
-              <td className="py-2">
+              <td className="p-2">
                 <span className="text-yellow-500">Pending</span>
               </td>
 
             </tr>
             <tr className="border-t">
-              <td className="py-2 flex items-center">
+              <td className="p-2 flex items-center">
 
                 Water Bottle
               </td>
-              <td className="py-2">IC</td>
-              <td className="py-2">
+              <td className="p-2">IC</td>
+              <td className="p-2">
                 <span className="">29-10-2024</span>
               </td>
-              <td className="py-2">
+              <td className="p-2">
                 <span className="">11:40 AM</span>
               </td>
-              <td className="py-2">
+              <td className="p-2">
                 <span className="text-green-500">Completed</span>
               </td>
 
