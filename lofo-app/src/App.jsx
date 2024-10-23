@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home } from './Components/Dashboard/Home'
 import { MainLost } from './Components/LostItem/MainLost'
 import { MainReport } from './Components/ReportItem/MainReport'
+import { MainWindow } from './Components/Messaging/MainWindow'
 
 
 function App() {
@@ -31,8 +32,9 @@ function App() {
             <Route path='/login' element={<Login />}></Route>
             <Route path='/signup' element={<SignUp />}></Route>
             <Route path='/dashboard' element={<Home />}></Route>
-            <Route path='/lostitems' element={<MainLost/>}></Route>
-            <Route path='/reportitems' element={<MainReport/>}></Route>
+            <Route path='/lostitems' element={<MainLost />}></Route>
+            <Route path='/reportitems' element={<MainReport />}></Route>
+            <Route path='/message' element={<MainWindow />}></Route>
           </Routes>
         </div>
       </Router>

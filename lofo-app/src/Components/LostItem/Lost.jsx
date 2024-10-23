@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDoc, getDocs,doc } from 'firebase/firestore';
 import { db } from '../HomePage/firebase'; // Import your Firebase Firestore instance
 // import p1 from './lost_items/lost-1.jpg';
 // import p2 from './lost_items/lost-2.jpeg';
@@ -14,8 +14,9 @@ export const Lost = () => {
     const fetchLostItems = async () => {
         const querySnapshot = await getDocs(collection(db, 'foundItems'));
         const items = [];
-        querySnapshot.forEach((doc) => {
-            items.push({ ...doc.data(), id: doc.id }); 
+        querySnapshot.forEach(async (docu) => {
+            let data = {...docu.data()}
+            items.push({ ...data,id: docu.id }); 
         });
         setLostItems(items); // Set the state with the fetched data
     };
@@ -57,7 +58,7 @@ export const Lost = () => {
                                 <td className="py-2">{item.landmark}</td>
                                 <td className="py-2">{item.dateFound}</td>
                                 <td className="py-2">{item.timeFound}</td>
-                                <td className="py-2">{item.reportedBy || 'Unknown'}</td>
+                                <td className="py-2">{item.reportedBy || 'ghfdfthgd'}</td>
                                 <td className="py-2">
                                     <button
                                         className='border-2 w-[50px] bg-green-600 font-semibold text-white shadow'

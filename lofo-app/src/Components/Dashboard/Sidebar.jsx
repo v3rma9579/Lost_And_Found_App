@@ -80,7 +80,10 @@ export const Sidebar = () => {
               <li>
                 <a href="#" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
                   <FaMessage />
-                  <span className="ml-4 font-poppins">Messaging</span>
+                  <Link to='/message'>
+                    <span className="ml-4 font-poppins">Messaging</span>
+                  </Link>
+
                 </a>
               </li>
             </ul>
