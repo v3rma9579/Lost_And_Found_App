@@ -1,20 +1,17 @@
-import React, { useState } from "react";
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
+import React from 'react'
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { Messages } from './Messages';
+import { Input } from './Input';
 
 export const Chat = () => {
-  const [activeChat, setActiveChat] = useState("person2");
-
-  const handleChatChange = (person) => {
-    setActiveChat(person);
-  };
-
-  return (
-    <div className="ml-[200px]  flex justify-center items-center h-screen bg-gray-100">
-      <div className="wrapper flex w-4/5 h-3/4 bg-white">
-        <ChatList activeChat={activeChat} handleChatChange={handleChatChange} />
-        <ChatWindow activeChat={activeChat} />
-      </div>
-    </div>
-  );
-};
+      return (
+            <div className='flex-initial w-full bg-gray-200'>
+                  <div className='h-16 bg-slate-600 flex items-center justify-between text-white'>
+                        <p className='ml-3 font-light text-[13px]'>Shubham</p>
+                        <BsThreeDotsVertical size={20} className='text-white mr-5 cursor-pointer' />
+                  </div>
+                  <Messages />
+                  <Input />
+            </div>
+      )
+}

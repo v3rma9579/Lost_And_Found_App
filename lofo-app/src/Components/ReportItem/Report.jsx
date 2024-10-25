@@ -147,10 +147,10 @@ export const Report = () => {
                               <button
                                     type="submit"
                                     className={`bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    disabled={loading} // Disable button when loading
+                                    disabled={loading} 
                               >
                                     {loading ? (
-                                          <span className="loader">Submitting...</span> // You can replace this with a loading spinner
+                                          <span className="loader">Submitting...</span> 
                                     ) : (
                                           "Submit"
                                     )}
