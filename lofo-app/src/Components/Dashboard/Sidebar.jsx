@@ -5,17 +5,23 @@ import { FaFileCircleQuestion } from "react-icons/fa6";
 import { BiSolidFilePlus } from "react-icons/bi";
 import { FaMessage } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
-import { auth, db } from '../HomePage/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth, db, storage } from '../HomePage/firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { FaFileAlt } from "react-icons/fa";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Sidebar = () => {
   const [userDetails, setUserDetails] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user);
         const docRef = doc(db, "Users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -36,55 +42,100 @@ export const Sidebar = () => {
     };
   }, []);
 
-  async function handleLogout() {
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!imageFile) {
+      toast.warning("Please select an image before uploading.");
+      return;
+    }
+    if (!auth.currentUser) return;
+
+    setUploading(true);
+    const storageRef = ref(storage, `profilePictures/${auth.currentUser.uid}`);
+
+    try {
+      await uploadBytes(storageRef, imageFile);
+      const photoURL = await getDownloadURL(storageRef);
+
+      const userDocRef = doc(db, "Users", auth.currentUser.uid);
+      await updateDoc(userDocRef, { profilePicture: photoURL });
+
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        profilePicture: photoURL,
+      }));
+
+      toast.success("Profile picture updated successfully!");
+      setUploading(false);
+      setImageFile(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload profile picture");
+      setUploading(false);
+    }
+  };
+
+  const handleLogout = async () => {
     localStorage.removeItem('loggedInUserID');
     await auth.signOut();
     window.location.href = "/login";
-  }
-
+  };
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+
       <div className='hidden md:block'>
         <section className="fixed top-0 left-0 w-72 h-full bg-gray-800 z-20 font-lato transition-all flex flex-col justify-between">
           <div>
             <div className='mt-5 flex flex-col gap-5 items-center justify-center'>
-              <img src={profile} className='w-[100px]' alt="Profile" />
+              <img
+                src={userDetails?.profilePicture || profile}
+                className='w-[100px] h-[100px] rounded-full cursor-pointer'
+                alt="Profile"
+                onClick={() => setIsModalOpen(true)}
+              />
               <span className='font-poppins text-white'>
                 Welcome, {userDetails ? userDetails.firstName : 'Loading...'}
               </span>
             </div>
             <ul className="mt-12">
               <li>
-                <a href="/dashboard" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
+                <Link to="/dashboard" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
                   <MdDashboard size={20} />
                   <span className="ml-4 font-poppins">Dashboard</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/lostitems" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
+                <Link to="/lost" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
                   <FaFileCircleQuestion size={20} />
-                  <Link to='/lostitems'>
-                    <span className="ml-4 font-poppins">View Lost Items</span>
-                  </Link>
-                </a>
+                  <span className="ml-4 font-poppins">View Lost Items</span>
+                </Link>
               </li>
               <li>
-                <a href="#" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
-                  <BiSolidFilePlus size={20} />
-                  <Link to='/reportitems'>
-                    <span className="ml-4 font-poppins">Report Missing Items</span>
-                  </Link>
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
-                  <FaMessage />
-                  <Link to='/message'>
-                    <span className="ml-4 font-poppins">Messaging</span>
-                  </Link>
+                <Link to="/found" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
+                <FaFileAlt size={20} />
+                  <span className="ml-4 font-poppins">View Found Items</span>
 
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/reportitems" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
+                  <BiSolidFilePlus size={20} />
+                  <span className="ml-4 font-poppins">Report Items</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/message" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
+                  <FaMessage />
+                  <span className="ml-4 font-poppins">Messaging</span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -97,43 +148,34 @@ export const Sidebar = () => {
         </section>
       </div>
 
-
-      <div className='md:hidden'>
-        <section className='fixed h-full w-20 top-0 left-0 bg-gray-800 z-20 font-lato transition-all justify-between'>
-          <div className='ml-4 mt-5'>
-            <img className='w-10' src={profile} alt="" />
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur">
+          <div className="bg-gray-800 p-5 rounded-lg text-center text-white w-96">
+            <h2 className="text-lg font-semibold mb-4">Change Profile Picture</h2>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="text-white mb-3"
+            />
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={handleUpload}
+                className="bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600"
+                disabled={uploading}
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-
-
-          <ul className="mt-20 flex flex-col gap-4">
-            <li>
-              <Link to="/dashboard" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
-                <MdDashboard size={20} />
-              </Link>
-            </li>
-            <li>
-              <Link to="/lostitems" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
-                <FaFileCircleQuestion size={20} />
-              </Link>
-            </li>
-            <li>
-              <Link to="/reportitems" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
-                <BiSolidFilePlus size={20} />
-              </Link>
-            </li>
-            <li>
-              <Link to="/dashboard" className="flex items-center py-4 px-6 text-white hover:text-blue-500">
-                <FaMessage />
-              </Link>
-            </li>
-          </ul>
-          <div className='hover:text-red-500 cursor-pointer mt-[280px] py-4 px-6 text-white'>
-            <IoLogOut size={20} />
-            <button onClick={handleLogout}>
-            </button>
-          </div>
-        </section>
-      </div>
+        </div>
+      )}
     </>
   );
 };

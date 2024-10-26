@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import { Navbar } from './Navbar';
 import profile from '../../assets/profile.png';
-import login from '../../assets/login-logo.png'
-import { auth } from './firebase'
+import login from '../../assets/login-logo.png';
+import { auth } from './firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +13,7 @@ export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [focusInput, setFocusInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleFocus = (input) => {
     setFocusInput(input);
@@ -28,32 +29,36 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
       await signInWithEmailAndPassword(auth, username, password);
       const user = auth.currentUser;
       localStorage.setItem('loggedInUserID', user.uid);
       console.log("User logged in successfully");
-      window.location.href = "/dashboard";
-      toast.success("User Logged in Sucessfully!!", {
-        position: 'top-center'
+
+      toast.success("User Logged in Successfully!", {
+        position: 'top-center',
+        autoClose: 2000, 
       });
-    }
-    catch (error) {
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 2000);
+    } catch (error) {
       toast.error("Incorrect username or password", {
-        position: 'top-center'
+        position: 'top-center',
       });
       console.error("Login failed:", error.message);
+    } finally {
+      setLoading(false); 
     }
-
-    console.log('Username:', username);
-    console.log('Password:', password);
   };
+
 
   return (
     <div>
-      <div className='bg-gray-100 h-screen' >
-        <Navbar/>
-        <div className=" flex items-center justify-center mt-32">
+      <div className="bg-gray-100 h-screen">
+        <Navbar />
+        <div className="flex items-center justify-center mt-32">
           <div className="flex bg-white rounded-lg shadow-lg max-w-3xl overflow-hidden">
             <div className="hidden md:block w-1/2">
               <img className="h-full w-[400px] object-scale-down" src={login} alt="background" />
@@ -63,16 +68,12 @@ export const Login = () => {
               <h2 className="text-2xl font-bold text-center text-gray-800">Welcome Back !!</h2>
               <form onSubmit={handleSubmit} className="mt-4">
                 <div
-                  className={`relative mb-6 ${focusInput === 'username'
-                    ? 'border-b-2 border-[#F74780]'
-                    : 'border-b-2 border-gray-300'
-                    }`}
+                  className={`relative mb-6 ${focusInput === 'username' ? 'border-b-2 border-[#F74780]' : 'border-b-2 border-gray-300'}`}
                 >
                   <div className="absolute left-0 top-2">
                     <FontAwesomeIcon
                       icon={faUser}
-                      className={`text-gray-500 transition-all duration-300 ${focusInput === 'username' ? 'text-[#F74780]' : ''
-                        }`}
+                      className={`text-gray-500 transition-all duration-300 ${focusInput === 'username' ? 'text-[#F74780]' : ''}`}
                     />
                   </div>
                   <input
@@ -86,16 +87,12 @@ export const Login = () => {
                   />
                 </div>
                 <div
-                  className={`relative mb-4 ${focusInput === 'password'
-                    ? 'border-b-2 border-[#F74780]'
-                    : 'border-b-2 border-gray-300'
-                    }`}
+                  className={`relative mb-4 ${focusInput === 'password' ? 'border-b-2 border-[#F74780]' : 'border-b-2 border-gray-300'}`}
                 >
                   <div className="absolute left-0 top-2">
                     <FontAwesomeIcon
                       icon={faLock}
-                      className={`text-gray-500 transition-all duration-300 ${focusInput === 'password' ? 'text-[#F74780]' : ''
-                        }`}
+                      className={`text-gray-500 transition-all duration-300 ${focusInput === 'password' ? 'text-[#F74780]' : ''}`}
                     />
                   </div>
                   <input
@@ -113,9 +110,17 @@ export const Login = () => {
                 </a>
                 <button
                   type="submit"
-                  className="w-full mt-6 bg-[#F74780] text-white py-2 rounded-lg transition duration-300 hover:bg-pink-700"
+                  className="w-full mt-6 bg-[#F74780] text-white py-2 rounded-lg transition duration-300 hover:bg-pink-700 flex items-center justify-center"
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? (
+                    <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
               <ToastContainer />
@@ -126,5 +131,3 @@ export const Login = () => {
     </div>
   );
 };
-
-

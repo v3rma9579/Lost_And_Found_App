@@ -16,6 +16,8 @@ export default {
         'calc-100-minus-160': 'calc(100% - 500px)',
       },
     },
-    plugins: [],
+    plugins: [
+      require('tailwind-scrollbar'),
+    ],
   }
 }
