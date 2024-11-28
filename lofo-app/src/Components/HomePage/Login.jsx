@@ -38,7 +38,7 @@ export const Login = () => {
 
       toast.success("User Logged in Successfully!", {
         position: 'top-center',
-        autoClose: 2000, 
+        autoClose: 1000, 
       });
       setTimeout(() => {
         window.location.href = "/dashboard";

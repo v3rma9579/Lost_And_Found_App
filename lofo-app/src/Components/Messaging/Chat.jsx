@@ -10,7 +10,7 @@ export const Chat = () => {
                         <p className='ml-3 font-light text-[13px]'>Shubham</p>
                         <BsThreeDotsVertical size={20} className='text-white mr-5 cursor-pointer' />
                   </div>
-                  <div className='overflow-y-auto p-2 scrollbar scrollbar-hidden'>
+                  <div className='overflow-y-auto scrollbar scrollbar-hidden'>
                         <Messages />
                   </div>
                   <div className='bottom-0 absolute ml-0 w-full'>

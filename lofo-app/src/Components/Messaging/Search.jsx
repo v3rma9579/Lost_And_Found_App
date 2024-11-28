@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDoc, getDocs } from "firebase/firestore";
 import { db } from '../HomePage/firebase';
+import { AuthContext } from "../../AuthContext"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import p1 from '../../assets/profile.png';
@@ -9,6 +10,8 @@ import { IoChatboxEllipses } from "react-icons/io5";
 export const Search = () => {
       const [username, setUsername] = useState("");
       const [user, setUser] = useState(null);
+
+      const {currentUser} = useContext(AuthContext);
 
       const searchUser = async () => {
             try {
@@ -43,6 +46,18 @@ export const Search = () => {
                   searchUser();
             }
       };
+
+      const handleSelect = async () => { 
+            const combined = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
+
+            try {
+                  await getDocs(db, "chats", combined, {messages: []})
+            }
+            catch {
+                  
+            }
+      }
+
 
       return (
             <div className='flex flex-col items-center'>
